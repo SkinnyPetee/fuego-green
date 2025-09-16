@@ -4,7 +4,7 @@ import { ReactQueryProvider } from "@/modules/commons/ui/providers/react-query-p
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-export const fontManrope = Manrope({
+const fontManrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope", // Define a CSS variable name
 });
