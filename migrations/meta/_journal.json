@@ -1,0 +1,62 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1757939333570,
+      "tag": "0000_material_martin_li",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1757941042255,
+      "tag": "0001_dashing_revanche",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757944807065,
+      "tag": "0002_living_inertia",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1757944893405,
+      "tag": "0003_wonderful_lorna_dane",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757945753478,
+      "tag": "0004_thankful_silver_sable",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1757945854446,
+      "tag": "0005_regular_timeslip",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1757951814272,
+      "tag": "0006_superb_king_cobra",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1758018976546,
+      "tag": "0007_last_fabian_cortez",
+      "breakpoints": true
+    }
+  ]
+}
