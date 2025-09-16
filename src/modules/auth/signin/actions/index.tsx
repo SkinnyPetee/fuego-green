@@ -52,7 +52,7 @@ export const signin = async (data: { email: string; otp: string }) => {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.error || "Invalid Otp, Please try again.");
+    throw new Error(errorData.message || "Invalid Otp, Please try again.");
   }
   return response.json();
 };
