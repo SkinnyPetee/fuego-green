@@ -5,8 +5,7 @@ import { formatZodErrors } from "@/db/validation/sendOtp";
 import { errorResponse, successResponse } from "@/lib/apiResponse";
 import { db } from "@/db/drizzle";
 import { otps, users } from "@/db/schema";
-import { eq, desc, and } from "drizzle-orm";
-import { z } from "zod";
+import { eq, desc } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
 const MAX_ATTEMPTS = 5;

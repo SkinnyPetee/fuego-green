@@ -2,24 +2,22 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { otps } from "@/db/schema"; // you need an otps table
-import { z } from "zod";
+
 import { successResponse, errorResponse } from "@/lib/apiResponse";
 import { nodemailer_transporter } from "@/lib/nodemailer";
 import { formatZodErrors, sendOtpSchema } from "@/db/validation/sendOtp";
 import { canSendOtp, cleanupExpiredOtps, generateOtp } from "@/util/otp";
-
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const parsed = sendOtpSchema.safeParse(body);
 
-
-   if (!parsed.success) {
+    if (!parsed.success) {
       const fieldErrors = formatZodErrors(parsed.error.issues);
       return NextResponse.json(
         errorResponse("Validation failed", fieldErrors),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -29,10 +27,7 @@ export async function POST(req: Request) {
 
     const rate = await canSendOtp(email);
     if (!rate.allowed) {
-      return NextResponse.json(
-        errorResponse(rate.message),
-        { status: 429 }
-      );
+      return NextResponse.json(errorResponse(rate.message), { status: 429 });
     }
 
     const otp = generateOtp();
@@ -46,7 +41,6 @@ export async function POST(req: Request) {
     });
 
     // send email (example with nodemailer)
-   
 
     await nodemailer_transporter.sendMail({
       from: `Fuego App <team@fuego.com>`,
@@ -55,15 +49,13 @@ export async function POST(req: Request) {
       text: `Your OTP code is ${otp}. It expires in 5 minutes.`,
     });
 
-    return NextResponse.json(
-      successResponse(null, "OTP sent successfully"),
-      { status: 200 }
-    );
+    return NextResponse.json(successResponse(null, "OTP sent successfully"), {
+      status: 200,
+    });
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      errorResponse("Failed to send OTP"),
-      { status: 500 }
-    );
+    return NextResponse.json(errorResponse("Failed to send OTP"), {
+      status: 500,
+    });
   }
 }

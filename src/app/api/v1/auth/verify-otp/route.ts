@@ -5,7 +5,6 @@ import { errorResponse, successResponse } from "@/lib/apiResponse";
 import { db } from "@/db/drizzle";
 import { otps, users } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { z } from "zod";
 import jwt, { SignOptions } from "jsonwebtoken";
 
 const MAX_ATTEMPTS = 5;
@@ -178,7 +177,7 @@ export async function POST(req: Request) {
       expiresIn: JWT_EXPIRES_IN,
       issuer: "Fuego App",
       subject: email,
-    } as jwt.SignOptions);
+    } as SignOptions);
 
     console.log(`OTP verified successfully for email: ${email}`);
 
