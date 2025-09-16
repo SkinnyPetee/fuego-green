@@ -1,5 +1,5 @@
 // app/api/v1/auth/send-otp/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { otps } from "@/db/schema"; // you need an otps table
 
@@ -8,7 +8,7 @@ import { nodemailer_transporter } from "@/lib/nodemailer";
 import { formatZodErrors, sendOtpSchema } from "@/db/validation/sendOtp";
 import { canSendOtp, cleanupExpiredOtps, generateOtp } from "@/util/otp";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = sendOtpSchema.safeParse(body);

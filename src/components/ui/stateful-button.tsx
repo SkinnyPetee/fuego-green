@@ -1,55 +1,60 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Check, X, LoaderCircle } from 'lucide-react';
-import { statefulButtonMachine } from '@/lib/stateful-button-machine';
-import { useMachine } from '@xstate/react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { motion, AnimatePresence, useReducedMotion, type Transition } from 'motion/react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Check, X, LoaderCircle } from "lucide-react";
+import { statefulButtonMachine } from "@/lib/stateful-button-machine";
+import { useMachine } from "@xstate/react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  type Transition,
+} from "motion/react";
 
 /**
  * CVA variants for the underlying button element.
  */
 const buttonVariants = cva(
-	'w-25 gap-1 relative overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-100',
-	{
-		variants: {
-			size: {
-				default: 'h-9 px-3.5 py-2 has-[>svg]:px-3',
-				sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
-				lg: 'h-10 rounded-md px-4.5 has-[>svg]:px-4'
-			}
-		},
-		defaultVariants: {
-			size: 'default'
-		}
-	}
+  "w-25 gap-1 relative overflow-hidden disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-100",
+  {
+    variants: {
+      size: {
+        default: "h-9 px-3.5 py-2 has-[>svg]:px-3",
+        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-10 rounded-md px-4.5 has-[>svg]:px-4",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+    },
+  }
 );
 
 /**
  * CVA variants for the progress indicator.
  */
-const progressVariants = cva('rounded-[2.5px]', {
-	variants: {
-		variant: {
-			default:
-				'bg-neutral-50/20 dark:bg-neutral-900/20 [&>[data-slot=progress-indicator]]:bg-neutral-50 [&>[data-slot=progress-indicator]]:dark:bg-neutral-900',
-			destructive:
-				'bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50',
-			outline:
-				'bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50',
-			secondary:
-				'bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50',
-			ghost:
-				'bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50'
-		}
-	},
-	defaultVariants: {
-		variant: 'default'
-	}
+const progressVariants = cva("rounded-[2.5px]", {
+  variants: {
+    variant: {
+      default:
+        "bg-neutral-50/20 dark:bg-neutral-900/20 [&>[data-slot=progress-indicator]]:bg-neutral-50 [&>[data-slot=progress-indicator]]:dark:bg-neutral-900",
+      destructive:
+        "bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50",
+      outline:
+        "bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50",
+      secondary:
+        "bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50",
+      ghost:
+        "bg-neutral-900/20 dark:bg-neutral-50/20 [&>[data-slot=progress-indicator]]:bg-neutral-900 [&>[data-slot=progress-indicator]]:dark:bg-neutral-50",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
 });
 
 /**
@@ -59,33 +64,33 @@ const progressVariants = cva('rounded-[2.5px]', {
  * If not provided, sensible defaults are used.
  */
 type AriaMessages = {
-	/**
-	 * Message announced while indeterminate work is in progress.
-	 *
-	 * @defaultValue `'Loading, please wait'`
-	 */
-	loading?: string;
-	/**
-	 * Function that generates a progress message.
-	 *
-	 * @param value - The current progress value.
-	 * @returns An accessible description of the progress.
-	 *
-	 * @defaultValue Rounds to nearest 25% (e.g., `"50%"`).
-	 */
-	progress?: (value: number) => string;
-	/**
-	 * Message announced when the action completes successfully.
-	 *
-	 * @defaultValue `'Completed successfully'`
-	 */
-	success?: string;
-	/**
-	 * Message announced when an error occurs.
-	 *
-	 * @defaultValue `'An error occurred'`
-	 */
-	error?: string;
+  /**
+   * Message announced while indeterminate work is in progress.
+   *
+   * @defaultValue `'Loading, please wait'`
+   */
+  loading?: string;
+  /**
+   * Function that generates a progress message.
+   *
+   * @param value - The current progress value.
+   * @returns An accessible description of the progress.
+   *
+   * @defaultValue Rounds to nearest 25% (e.g., `"50%"`).
+   */
+  progress?: (value: number) => string;
+  /**
+   * Message announced when the action completes successfully.
+   *
+   * @defaultValue `'Completed successfully'`
+   */
+  success?: string;
+  /**
+   * Message announced when an error occurs.
+   *
+   * @defaultValue `'An error occurred'`
+   */
+  error?: string;
 };
 
 /**
@@ -96,38 +101,40 @@ type AriaMessages = {
  * from CVA, and accessibility messages.
  */
 type BaseProps = {
-	/**
-	 * Click handler invoked when the button is pressed.
-	 *
-	 * @param event - The click event object.
-	 * @returns Can return a `Promise` if the click handler is asynchronous.
-	 */
-	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | Promise<unknown>;
-	/**
-	 * Callback triggered when the action completes successfully.
-	 *
-	 * @remarks
-	 * This callback is invoked by the {@link statefulButtonMachine} `onComplete` action.
-	 */
-	onComplete?: () => void;
-	/**
-	 * Callback triggered when when `onClick` throws (or a rejection occurs).
-	 *
-	 * @param error - The error object.
-	 */
-	onError?: (error: Error) => void;
-	/**
-	 * Content to render inside the button while in the `idle` state.
-	 */
-	children?: React.ReactNode;
-	/**
-	 * Customizable ARIA messages for accessibility.
-	 * Defaults are provided if not supplied.
-	 */
-	ariaMessages?: AriaMessages;
+  /**
+   * Click handler invoked when the button is pressed.
+   *
+   * @param event - The click event object.
+   * @returns Can return a `Promise` if the click handler is asynchronous.
+   */
+  onClick?: (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => void | Promise<unknown>;
+  /**
+   * Callback triggered when the action completes successfully.
+   *
+   * @remarks
+   * This callback is invoked by the {@link statefulButtonMachine} `onComplete` action.
+   */
+  onComplete?: () => void;
+  /**
+   * Callback triggered when when `onClick` throws (or a rejection occurs).
+   *
+   * @param error - The error object.
+   */
+  onError?: (error: Error) => void;
+  /**
+   * Content to render inside the button while in the `idle` state.
+   */
+  children?: React.ReactNode;
+  /**
+   * Customizable ARIA messages for accessibility.
+   * Defaults are provided if not supplied.
+   */
+  ariaMessages?: AriaMessages;
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
-	VariantProps<typeof buttonVariants> &
-	VariantProps<typeof progressVariants>;
+  VariantProps<typeof buttonVariants> &
+  VariantProps<typeof progressVariants>;
 
 /**
  * Props for the spinner-style {@link StatefulButton}.
@@ -138,16 +145,16 @@ type BaseProps = {
  * promise returned by `onClick` resolves, rejects, or throws.
  */
 type SpinnerButtonProps = {
-	/**
-	 * Specifies the spinner button type.
-	 *
-	 * @defaultValue `'spinner'`
-	 */
-	buttonType?: 'spinner';
-	/**
-	 * The progress prop is not applicable to the spinner button type.
-	 */
-	progress?: never;
+  /**
+   * Specifies the spinner button type.
+   *
+   * @defaultValue `'spinner'`
+   */
+  buttonType?: "spinner";
+  /**
+   * The progress prop is not applicable to the spinner button type.
+   */
+  progress?: never;
 };
 
 /**
@@ -160,15 +167,15 @@ type SpinnerButtonProps = {
  * controlled value between 0 and 100.
  */
 type ProgressButtonProps = {
-	/**
-	 * Specifies the progress button type. Must be 'progress'.
-	 */
-	buttonType: 'progress';
-	/**
-	 * The current progress value (0-100). This is a controlled prop used
-	 * to update the progress bar.
-	 */
-	progress: number;
+  /**
+   * Specifies the progress button type. Must be 'progress'.
+   */
+  buttonType: "progress";
+  /**
+   * The current progress value (0-100). This is a controlled prop used
+   * to update the progress bar.
+   */
+  progress: number;
 };
 
 /**
@@ -179,7 +186,8 @@ type ProgressButtonProps = {
  * @see {@link SpinnerButtonProps} for the default spinner mode.
  * @see {@link ProgressButtonProps} for the progress bar mode.
  */
-export type StatefulButtonProps = BaseProps & (SpinnerButtonProps | ProgressButtonProps);
+export type StatefulButtonProps = BaseProps &
+  (SpinnerButtonProps | ProgressButtonProps);
 
 /**
  * A stateful button that provides visual feedback for different states, such as
@@ -244,185 +252,198 @@ export type StatefulButtonProps = BaseProps & (SpinnerButtonProps | ProgressButt
  * ```
  */
 const StatefulButton: React.FC<StatefulButtonProps> = ({
-	buttonType = 'spinner',
-	onClick,
-	onComplete,
-	onError,
-	progress,
-	children,
-	className,
-	variant,
-	size,
-	ariaMessages,
-	...props
+  buttonType = "spinner",
+  onClick,
+  onComplete,
+  onError,
+  progress,
+  children,
+  className,
+  variant,
+  size,
+  ariaMessages,
+  ...props
 }) => {
-	const [snapshot, send] = useMachine(statefulButtonMachine, {
-		input: {
-			onComplete,
-			buttonType
-		}
-	});
+  const [snapshot, send] = useMachine(statefulButtonMachine, {
+    input: {
+      onComplete,
+      buttonType,
+    },
+  });
 
-	const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useReducedMotion();
 
-	React.useEffect(() => {
-		if (buttonType === 'progress' && typeof progress === 'number') {
-			send({ type: 'updateProgress', progress });
-		}
-	}, [progress]);
+  React.useEffect(() => {
+    if (buttonType === "progress" && typeof progress === "number") {
+      send({ type: "updateProgress", progress });
+    }
+  }, [progress, buttonType, send]);
 
-	/**
-	 * Click handler that:
-	 * - sends `click` to the machine to transition into loading/progress,
-	 * - awaits the `onClick` handler if it returns a promise (spinner mode),
-	 * - dispatches `finishLoading` when spinner promise resolves,
-	 * - catches errors, forwards them to `onError` and transitions the machine to `error`.
-	 *
-	 * @param event - The click event from the button element.
-	 *
-	 * @throws Rethrows or forwards thrown values to `onError` as `Error` objects.
-	 *
-	 * @remarks
-	 * In spinner mode, success is signaled via `finishLoading`.
-	 * In progress mode, success is driven externally via `progress >= 100`.
-	 */
-	const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-		send({ type: 'click' });
-		try {
-			await onClick?.(event);
-			if (buttonType === 'spinner') {
-				send({ type: 'finishLoading' });
-			}
-		} catch (error: unknown) {
-			const err = error instanceof Error ? error : new Error(String(error));
-			onError?.(err);
-			send({ type: 'error' });
-		}
-	};
+  /**
+   * Click handler that:
+   * - sends `click` to the machine to transition into loading/progress,
+   * - awaits the `onClick` handler if it returns a promise (spinner mode),
+   * - dispatches `finishLoading` when spinner promise resolves,
+   * - catches errors, forwards them to `onError` and transitions the machine to `error`.
+   *
+   * @param event - The click event from the button element.
+   *
+   * @throws Rethrows or forwards thrown values to `onError` as `Error` objects.
+   *
+   * @remarks
+   * In spinner mode, success is signaled via `finishLoading`.
+   * In progress mode, success is driven externally via `progress >= 100`.
+   */
+  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    send({ type: "click" });
+    try {
+      await onClick?.(event);
+      if (buttonType === "spinner") {
+        send({ type: "finishLoading" });
+      }
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      onError?.(err);
+      send({ type: "error" });
+    }
+  };
 
-	/**
-	 * Default ARIA messages used if {@link AriaMessages} are not provided.
-	 */
-	const defaultAriaMessages: Required<AriaMessages> = {
-		loading: 'Loading, please wait',
-		progress: (value: number) => {
-			const roundedValue = Math.round(value / 25) * 25;
-			return `${roundedValue}%`;
-		},
-		success: 'Completed successfully',
-		error: 'An error occurred'
-	};
-	const ariaMsg = { ...defaultAriaMessages, ...ariaMessages };
+  /**
+   * Default ARIA messages used if {@link AriaMessages} are not provided.
+   */
+  const defaultAriaMessages: Required<AriaMessages> = {
+    loading: "Loading, please wait",
+    progress: (value: number) => {
+      const roundedValue = Math.round(value / 25) * 25;
+      return `${roundedValue}%`;
+    },
+    success: "Completed successfully",
+    error: "An error occurred",
+  };
+  const ariaMsg = { ...defaultAriaMessages, ...ariaMessages };
 
-	const loadingContent = (
-		<>
-			<LoaderCircle className="animate-spin" aria-hidden="true" data-cy="spinner-icon" />
-			<span className="sr-only">{ariaMsg.loading}</span>
-		</>
-	);
-	const progressContent = (
-		<>
-			<Progress value={snapshot.context.progress} className={cn(progressVariants({ variant }))} />
-			<span className="sr-only" data-cy="progress-value-text">
-				{ariaMsg.progress(snapshot.context.progress)}
-			</span>
-		</>
-	);
-	const successContent = (
-		<>
-			<Check aria-hidden="true" data-cy="check-icon" />
-			<span className="sr-only">{ariaMsg.success}</span>
-		</>
-	);
-	const errorContent = (
-		<>
-			<X aria-hidden="true" data-cy="x-icon" />
-			<span className="sr-only">{ariaMsg.error}</span>
-		</>
-	);
+  const loadingContent = (
+    <>
+      <LoaderCircle
+        className="animate-spin"
+        aria-hidden="true"
+        data-cy="spinner-icon"
+      />
+      <span className="sr-only">{ariaMsg.loading}</span>
+    </>
+  );
+  const progressContent = (
+    <>
+      <Progress
+        value={snapshot.context.progress}
+        className={cn(progressVariants({ variant }))}
+      />
+      <span className="sr-only" data-cy="progress-value-text">
+        {ariaMsg.progress(snapshot.context.progress)}
+      </span>
+    </>
+  );
+  const successContent = (
+    <>
+      <Check aria-hidden="true" data-cy="check-icon" />
+      <span className="sr-only">{ariaMsg.success}</span>
+    </>
+  );
+  const errorContent = (
+    <>
+      <X aria-hidden="true" data-cy="x-icon" />
+      <span className="sr-only">{ariaMsg.error}</span>
+    </>
+  );
 
-	const slideTransition: Transition = { duration: shouldReduceMotion ? 0.1 : 0.2, ease: 'easeOut' };
-	const fadeTransition: Transition = { duration: shouldReduceMotion ? 0.05 : 0.15, ease: 'linear' };
-	const reducedY = shouldReduceMotion ? 20 : 80;
+  const slideTransition: Transition = {
+    duration: shouldReduceMotion ? 0.1 : 0.2,
+    ease: "easeOut",
+  };
+  const fadeTransition: Transition = {
+    duration: shouldReduceMotion ? 0.05 : 0.15,
+    ease: "linear",
+  };
+  const reducedY = shouldReduceMotion ? 20 : 80;
 
-	return (
-		<Button
-			variant={variant}
-			className={cn(buttonVariants({ size, className }))}
-			onClick={handleClick}
-			disabled={!snapshot.matches('idle')}
-			aria-live="polite"
-			data-cy="stateful-button"
-			{...props}
-		>
-			<AnimatePresence mode="wait" initial={false}>
-				{snapshot.matches('idle') && (
-					<motion.div
-						key="idle"
-						initial={{ y: `-${reducedY}%`, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						exit={{ y: `-${reducedY}%`, opacity: 0 }}
-						transition={slideTransition}
-						className="flex items-center gap-1"
-					>
-						{children}
-					</motion.div>
-				)}
+  return (
+    <Button
+      variant={variant}
+      className={cn(buttonVariants({ size, className }))}
+      onClick={handleClick}
+      disabled={!snapshot.matches("idle")}
+      aria-live="polite"
+      data-cy="stateful-button"
+      {...props}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {snapshot.matches("idle") && (
+          <motion.div
+            key="idle"
+            initial={{ y: `-${reducedY}%`, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: `-${reducedY}%`, opacity: 0 }}
+            transition={slideTransition}
+            className="flex items-center gap-1"
+          >
+            {children}
+          </motion.div>
+        )}
 
-				{snapshot.matches('loading') && (
-					<motion.div
-						key="loading"
-						initial={{ y: `${reducedY}%`, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={slideTransition}
-						className="flex items-center gap-1"
-					>
-						{loadingContent}
-					</motion.div>
-				)}
+        {snapshot.matches("loading") && (
+          <motion.div
+            key="loading"
+            initial={{ y: `${reducedY}%`, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={slideTransition}
+            className="flex items-center gap-1"
+          >
+            {loadingContent}
+          </motion.div>
+        )}
 
-				{snapshot.matches('progress') && (
-					<motion.div
-						key="progress"
-						initial={{ y: `${reducedY}%`, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={slideTransition}
-						className="flex w-full items-center gap-1"
-					>
-						{progressContent}
-					</motion.div>
-				)}
+        {snapshot.matches("progress") && (
+          <motion.div
+            key="progress"
+            initial={{ y: `${reducedY}%`, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={slideTransition}
+            className="flex w-full items-center gap-1"
+          >
+            {progressContent}
+          </motion.div>
+        )}
 
-				{snapshot.matches('success') && (
-					<motion.div
-						key="success"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ y: `${reducedY}%`, opacity: 0 }}
-						transition={fadeTransition}
-						className="flex items-center gap-1"
-					>
-						{successContent}
-					</motion.div>
-				)}
+        {snapshot.matches("success") && (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ y: `${reducedY}%`, opacity: 0 }}
+            transition={fadeTransition}
+            className="flex items-center gap-1"
+          >
+            {successContent}
+          </motion.div>
+        )}
 
-				{snapshot.matches('error') && (
-					<motion.div
-						key="error"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ y: `${reducedY}%`, opacity: 0 }}
-						transition={fadeTransition}
-						className="flex items-center gap-1"
-					>
-						{errorContent}
-					</motion.div>
-				)}
-			</AnimatePresence>
-		</Button>
-	);
+        {snapshot.matches("error") && (
+          <motion.div
+            key="error"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ y: `${reducedY}%`, opacity: 0 }}
+            transition={fadeTransition}
+            className="flex items-center gap-1"
+          >
+            {errorContent}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Button>
+  );
 };
 
 export default StatefulButton;

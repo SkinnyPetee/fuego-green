@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { verifyOtpSchema } from "@/db/validation/verifyOtp";
 import { formatZodErrors } from "@/db/validation/sendOtp";
 import { errorResponse, successResponse } from "@/lib/apiResponse";
@@ -17,7 +17,7 @@ if (!JWT_SECRET) {
   throw new Error("JWT_SECRET environment variable is required");
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     // Debug: Log the request
     console.log("OTP verification request received");
