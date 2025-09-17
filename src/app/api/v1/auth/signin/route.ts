@@ -72,10 +72,10 @@ export async function POST(req: NextRequest) {
     });
 
     // Check if user's email is verified
-    if (!user.emailVerified) {
-      console.log("User email not verified for sign-in:", email);
+    if (!user.accountVerified) {
+      console.log("User account not verified for sign-in:", email);
       return NextResponse.json(
-        errorResponse("Email not verified. Please verify your email first."),
+        errorResponse("Account not verified. Please create a account first."),
         { status: 403 },
       );
     }

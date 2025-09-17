@@ -13,18 +13,18 @@ const otpSchema = z.object({
 
 const additionalInfoSchema = z
   .object({
-    accountType: z.enum(["Individual", "Business"], {
+    accountType: z.enum(["individual", "business"], {
       message: "Please select an account type",
     }),
     organizationName: z.string().optional(), // Optional field
     organizationType: z.string().optional(), // Optional field
-    title: z.enum(["Mr", "Ms", "Mrs", "Dr", "Prof"], {
+    title: z.enum(["mr", "ms", "mrs", "dr", "prof"], {
       message: "Please select a title",
     }),
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     address: z.string().min(1, "Address is required"),
-    contactMedium: z.enum(["Email", "Phone"], {
+    contactMedium: z.enum(["email", "phone"], {
       message: "Please select a contact medium",
     }),
     phoneNumber: z
@@ -33,7 +33,7 @@ const additionalInfoSchema = z
       .max(10, "Phone number must be 10 digits"),
   })
   .superRefine((data, ctx) => {
-    if (data.accountType === "Business") {
+    if (data.accountType === "business") {
       if (!data.organizationName || data.organizationName.trim().length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -75,14 +75,14 @@ export function useSignupForm() {
   const additionalInfoForm = useForm<AdditionalInfoValues>({
     resolver: zodResolver(additionalInfoSchema),
     defaultValues: {
-      accountType: "Business",
+      accountType: "business",
       organizationName: "",
       organizationType: "",
-      title: "Mr",
+      title: "mr",
       firstName: "",
       lastName: "",
       address: "",
-      contactMedium: "Email",
+      contactMedium: "email",
       phoneNumber: "",
     },
     mode: "onChange",

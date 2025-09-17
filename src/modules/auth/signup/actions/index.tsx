@@ -54,28 +54,25 @@ export const verifyOtp = async (data: { email: string; otp: string }) => {
 };
 
 export const register = async (data: TRegisterData & { token: string }) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/account`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${data.token}`,
-      },
-      body: JSON.stringify({
-        email: data.email,
-        accountType: data.accountType,
-        title: data.title,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        address: data.address,
-        contactMedium: data.contactMedium,
-        phoneNumber: data.phoneNumber,
-        organizationType: data.organizationType,
-        organizationName: data.organizationName,
-      }),
-    }
-  );
+  const response = await fetch(`/api/v1/account`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${data.token}`,
+    },
+    body: JSON.stringify({
+      email: data.email,
+      accountType: data.accountType,
+      title: data.title,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      address: data.address,
+      contactMedium: data.contactMedium,
+      phoneNumber: data.phoneNumber,
+      organizationType: data.organizationType,
+      organizationName: data.organizationName,
+    }),
+  });
 
   if (!response.ok) {
     const errorData = await response.json();

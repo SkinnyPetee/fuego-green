@@ -44,9 +44,24 @@ export async function POST(req: NextRequest) {
 
     await nodemailer_transporter.sendMail({
       from: `Fuego App <team@fuego.com>`,
-      to: parsed.data.email,
-      subject: "Your OTP Code",
-      text: `Your OTP code is ${otp}. It expires in 5 minutes.`,
+      to: email,
+      subject: "Your New OTP Code",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Your New OTP Code</h2>
+          <p>You requested a OTP code. Here it is:</p>
+          <div style="font-size: 24px; font-weight: bold; color: #007bff; padding: 20px; background-color: #f8f9fa; border-radius: 8px; text-align: center; margin: 20px 0;">
+            ${otp}
+          </div>
+          <p style="color: #666;">
+            This code will expire in <strong>5 minutes</strong>. Please use it to complete your verification.
+          </p>
+          <p style="color: #666; font-size: 14px;">
+            If you didn't request this code, please ignore this email.
+          </p>
+        </div>
+      `,
+      text: `Your new OTP code is ${otp}. It expires in 5 minutes. If you didn't request this code, please ignore this email.`,
     });
 
     return NextResponse.json(successResponse(null, "OTP sent successfully"), {

@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useState } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -55,7 +55,7 @@ export const SignupForm = () => {
 export function SignupFormSuspense() {
   const [step, setStep] = useState<
     "basicInfo" | "otp" | "additionalInfo" | "success"
-  >("basicInfo");
+  >("additionalInfo");
   const [formData, setFormData] = useState<{
     basicInfo: BasicInfoValues;
     otpInfo: OtpValues;
@@ -64,12 +64,12 @@ export function SignupFormSuspense() {
     basicInfo: { email: "" },
     otpInfo: { otp: "" },
     additionalInfo: {
-      title: "Mr",
-      accountType: "Business",
+      title: "mr",
+      accountType: "business",
       firstName: "",
       lastName: "",
       address: "",
-      contactMedium: "Email",
+      contactMedium: "email",
       phoneNumber: "",
     },
   });
@@ -113,10 +113,12 @@ export function SignupFormSuspense() {
   const registrationMutation = useMutation({
     mutationFn: (data: TRegisterData & { token: string }) => register(data),
     onSuccess: ({ data }) => {
-      if (data.accountID) {
-        localStorage.setItem("fuego_accountId", data.accountID);
+      if (data.accountId) {
+        localStorage.setItem("fuego_accountId", data.accountId);
       }
-      setStep("success");
+      setTimeout(() => {
+        setStep("success");
+      }, 1500);
     },
     onError: (error) => {
       additionalInfoForm.setError("root", {
@@ -448,8 +450,8 @@ export function SignupFormSuspense() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Individual">Individual</SelectItem>
-                          <SelectItem value="Business">Business</SelectItem>
+                          <SelectItem value="individual">Individual</SelectItem>
+                          <SelectItem value="business">Business</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -464,7 +466,7 @@ export function SignupFormSuspense() {
                   render={({ field }) => (
                     <FormItem
                       className={
-                        watchAccountType === "Business" ? "" : "sr-only"
+                        watchAccountType === "business" ? "" : "sr-only"
                       }
                     >
                       <FormLabel>Organization Name</FormLabel>
@@ -486,7 +488,7 @@ export function SignupFormSuspense() {
                   render={({ field }) => (
                     <FormItem
                       className={
-                        watchAccountType === "Business" ? "" : "hidden"
+                        watchAccountType === "business" ? "" : "hidden"
                       }
                     >
                       <FormLabel>Organization Type</FormLabel>
@@ -500,18 +502,18 @@ export function SignupFormSuspense() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Corporation">
+                          <SelectItem value="corporation">
                             Corporation
                           </SelectItem>
-                          <SelectItem value="LLC">LLC</SelectItem>
-                          <SelectItem value="Partnership">
+                          <SelectItem value="llc">LLC</SelectItem>
+                          <SelectItem value="partnership">
                             Partnership
                           </SelectItem>
-                          <SelectItem value="Sole Proprietorship">
+                          <SelectItem value="sole proprietorship">
                             Sole Proprietorship
                           </SelectItem>
-                          <SelectItem value="Non-Profit">Non-Profit</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
+                          <SelectItem value="non-profit">Non-Profit</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -536,11 +538,11 @@ export function SignupFormSuspense() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Mr">Mr</SelectItem>
-                          <SelectItem value="Ms">Ms</SelectItem>
-                          <SelectItem value="Mrs">Mrs</SelectItem>
-                          <SelectItem value="Dr">Dr</SelectItem>
-                          <SelectItem value="Prof">Prof</SelectItem>
+                          <SelectItem value="mr">Mr</SelectItem>
+                          <SelectItem value="ms">Ms</SelectItem>
+                          <SelectItem value="mrs">Mrs</SelectItem>
+                          <SelectItem value="dr">Dr</SelectItem>
+                          <SelectItem value="prof">Prof</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -643,8 +645,8 @@ export function SignupFormSuspense() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Email">Email</SelectItem>
-                          <SelectItem value="Phone">Phone</SelectItem>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="phone">Phone</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -658,7 +660,7 @@ export function SignupFormSuspense() {
                   </p>
                 )}
 
-                <Button
+                {/* <Button
                   type="submit"
                   disabled={
                     !additionalInfoForm.formState.isDirty ||
@@ -674,7 +676,51 @@ export function SignupFormSuspense() {
                   ) : (
                     <>Submit</>
                   )}
-                </Button>
+                </Button> */}
+                <StatefulButton
+                  className="w-full"
+                  disabled={
+                    !additionalInfoForm.formState.isDirty ||
+                    !additionalInfoForm.formState.isValid
+                  }
+                  onClick={additionalInfoForm.handleSubmit(async (data) => {
+                    try {
+                      // ⏳ Artificial delay of 2s
+                      setFormData((prev) => ({
+                        ...prev,
+                        additionalInfo: data,
+                      }));
+                      //await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                      const token = localStorage.getItem("auth_token");
+
+                      if (!token) {
+                        additionalInfoForm.setError("root", {
+                          type: "server",
+                          message: "No auth token found. Please try again.",
+                        });
+                        return;
+                      }
+
+                      const finalData = {
+                        email: formData.basicInfo.email,
+                        ...data,
+                        token: token,
+                      };
+
+                      console.log("final data account creation", finalData);
+
+                      await registrationMutation.mutateAsync(finalData);
+
+                      // Save data into parent state
+                    } catch (error) {
+                      // Let StatefulButton handle the error state
+                      throw error;
+                    }
+                  })}
+                >
+                  Submit
+                </StatefulButton>
               </form>
             </Form>
           </CardContent>
