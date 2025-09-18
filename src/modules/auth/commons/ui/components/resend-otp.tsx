@@ -12,11 +12,11 @@ interface ResendOtpProps {
   basicInfo: BasicInfoValues;
 }
 
-interface ApiError {
-  message: string;
-  waitTime?: number;
-  resendCount?: number;
-}
+// interface ApiError {
+//   message: string;
+//   waitTime?: number;
+//   resendCount?: number;
+// }
 
 export default function ResendOtp({
   onResend,
@@ -31,7 +31,7 @@ export default function ResendOtp({
   const [error, setError] = useState<string | null>(null);
 
   // Constants from your API
-  const MAX_RESENDS_PER_HOUR = 5;
+  //const MAX_RESENDS_PER_HOUR = 5;
   const MAX_RESENDS_PER_DAY = 10;
   const RESEND_DELAY_SECONDS = 60;
 
