@@ -111,7 +111,7 @@ export default function SigninForm() {
     <>
       {/* Email Step */}
       {step === "email" && (
-        <Card className="w-full min-w-[300px] border-amber-200">
+        <Card className="w-full min-w-[300px]">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
               Signin

@@ -195,5 +195,6 @@
   body {
     @apply text-foreground;
     letter-spacing: var(--tracking-normal);
+    font-family: var(--font-manrope), sans-serif;
   }
 }

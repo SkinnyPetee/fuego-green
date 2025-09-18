@@ -1,9 +1,7 @@
+import Dashboard from "@/modules/dashboard/ui/layouts/dashboard-layout";
+
 const Page = () => {
-  return (
-    <>
-      <h1>Dashboard</h1>
-    </>
-  );
+  return <Dashboard />;
 };
 
 export default Page;

@@ -55,7 +55,7 @@ export const SignupForm = () => {
 export function SignupFormSuspense() {
   const [step, setStep] = useState<
     "basicInfo" | "otp" | "additionalInfo" | "success"
-  >("additionalInfo");
+  >("basicInfo");
   const [formData, setFormData] = useState<{
     basicInfo: BasicInfoValues;
     otpInfo: OtpValues;

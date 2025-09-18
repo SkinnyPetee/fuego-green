@@ -74,15 +74,15 @@ export const accounts = pgTable(
   "accounts",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    accountType: accountTypeEnum("accountType").notNull(),
-    organizationName: text("organizationName"),
-    organizationType: organizationTypeEnum("organizationType"),
+    accountType: accountTypeEnum("account_type").notNull(),
+    organizationName: text("organization_name"),
+    organizationType: organizationTypeEnum("organization_type"),
     title: titleEnum("title").notNull(),
-    firstName: text("firstName").notNull(),
-    lastName: text("lastName").notNull(),
+    firstName: text("first_name").notNull(),
+    lastName: text("last_name").notNull(),
     address: text("address").notNull(),
-    phoneNumber: varchar("phone_number", { length: 10 }).notNull(),
-    contactMedium: contactMediumEnum("contactMedium").notNull(),
+    phoneNumber: varchar("phone_number", { length: 10 }).notNull().unique(),
+    contactMedium: contactMediumEnum("contact_medium").notNull(),
     userId: uuid("user_id")
       .notNull()
       .unique() // Ensures one-to-one relationship
@@ -105,3 +105,46 @@ export const accounts = pgTable(
 // 🔹 Types for OTP table
 export type Register = InferSelectModel<typeof accounts>; // row type
 export type NewRegister = InferInsertModel<typeof accounts>; // insert type
+
+export const businessSizeEnum = pgEnum("businessSize", [
+  "small",
+  "medium",
+  "large",
+  "enterprise",
+]);
+
+export const businesses = pgTable(
+  "businesses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    businessName: text("business_name").notNull(),
+    pan: varchar("pan", { length: 10 }).notNull(),
+    phone: varchar("phone", { length: 10 }).notNull(),
+    businessEmail: varchar("email", { length: 255 }).notNull(),
+    registrationNumber: text("registration_number").notNull(),
+    businessAddress: text("business_address").notNull(),
+    businessSize: businessSizeEnum("business_size").notNull(),
+    tan: varchar("tan", { length: 10 }).notNull(),
+    gstin: varchar("gstin", { length: 15 }).notNull(),
+    primary: boolean("primary").default(false).notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    accountId: uuid("account_id")
+      .notNull()
+      .references(() => accounts.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    // Add CHECK constraint for minimum length
+    check("business_name_min_length", sql`length(${table.businessName}) >= 2`),
+    check("pan_length", sql`length(${table.pan}) = 10`),
+    check("phone_length", sql`length(${table.pan}) = 10`),
+    check(
+      "business_address_min_length",
+      sql`length(${table.businessAddress}) >= 2`,
+    ),
+    check("tan_length", sql`length(${table.tan}) = 10`),
+    check("gstin_length", sql`length(${table.gstin}) = 15`),
+  ],
+);
+
+export type Businesseses = InferSelectModel<typeof businesses>; // row type
+export type NewBusinesses = InferInsertModel<typeof businesses>; // insert type

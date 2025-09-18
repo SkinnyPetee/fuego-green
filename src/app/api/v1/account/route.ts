@@ -3,42 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { accounts, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import jwt from "jsonwebtoken";
 
 import { successResponse, errorResponse } from "@/lib/apiResponse";
 import { formatZodErrors } from "@/db/validation/sendOtp";
 import { createAccountSchema } from "@/db/validation/create-account";
-
-// JWT payload type
-interface JWTPayload {
-  userId: string;
-  email: string;
-  verified: boolean;
-  iat: number;
-  exp: number;
-  iss: string;
-  sub: string;
-}
-
-async function verifyJWT(token: string): Promise<JWTPayload> {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
-
-    // Additional validation
-    if (!decoded.verified) {
-      throw new Error("User email not verified");
-    }
-
-    if (decoded.iss !== "Fuego App") {
-      throw new Error("Invalid token issuer");
-    }
-
-    return decoded;
-  } catch (error) {
-    console.error("JWT verification failed:", error);
-    throw new Error("Invalid or expired token");
-  }
-}
+import { verifyJWT } from "@/util/verify-token";
 
 export async function POST(req: NextRequest) {
   try {
